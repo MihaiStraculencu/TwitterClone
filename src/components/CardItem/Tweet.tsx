@@ -1,7 +1,7 @@
 export default function Tweet() {
   return (
     <div>
-      <div className="bg-white text-black text-2xl h-[400px] w-full flex justify-center">
+      <div className=" text-black text-2xl h-[400px] w-full flex justify-center">
         <div className="px-4 py-2 border rounded-2xl hover:bg-slate-100 transition duration-200">
           <div className="flex space-x-1 justify-between items-center w-[570px]">
             <div className="flex justify-center items-center space-x-1">
