@@ -1,11 +1,18 @@
 import { getDatabase, ref, set } from "firebase/database";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { db } from "../../../../firebase";
 import { v4 as uuid } from "uuid";
+import { useNavigate } from "react-router";
 
 const Cardtextarea = () => {
   const bodyRef = useRef(null);
+  const [createtweet, setCreateTweet] = useState("");
+  let navigate = useNavigate();
+  const redirectClick = () => {
+    let path = `/`;
+    navigate(path);
+  };
 
   return (
     <div className="w-[510px] py-2">
@@ -23,6 +30,7 @@ const Cardtextarea = () => {
       >
         <div className="flex flex-col items-end border-b border-blue-200 py-6 px-2 space-y-2">
           <textarea
+            onChange={(event) => setCreateTweet(event.target.value)}
             name="body"
             ref={bodyRef}
             maxLength={550}
@@ -32,6 +40,8 @@ const Cardtextarea = () => {
         </div>
         <div className="flex justify-end py-3">
           <button
+            disabled={!createtweet}
+            onClick={redirectClick}
             className="w-[80px] bg-blue-500 hover:bg-blue-700 hover:border-blue-700 text-sm text-slate-100 py-2 px-2 rounded-2xl font-bold"
             type="submit"
           >
@@ -39,8 +49,9 @@ const Cardtextarea = () => {
           </button>
         </div>
       </form>
-      <div className="flex"></div>
     </div>
   );
+
+  let lenght: number;
 };
 export default Cardtextarea;
