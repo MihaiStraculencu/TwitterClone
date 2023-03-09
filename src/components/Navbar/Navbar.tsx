@@ -14,7 +14,7 @@ export default function Navbar() {
 
   return (
     <div className="flex justify-center">
-      <div className="border-black items-center text-black bg-indigo-400 fixed w-full h-[70px] flex justify-center space-x-20">
+      <div className="border-black items-center text-black bg-gradient-to-r from-blue-700 to-indigo-800 fixed w-full shadow-2xl h-[70px] flex justify-center space-x-20">
         <button
           onClick={redirectClick}
           className="w-[100px] h-[30px] border border-white rounded-2xl text-white"
