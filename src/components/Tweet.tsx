@@ -2,10 +2,7 @@ export default function Tweet() {
   return (
     <div>
       <div className=" text-black text-2xl h-[400px] w-full flex justify-center">
-        <div
-          className="px-4 py-2 border rounded-2xl hover:to-blue-200
-         transition duration-200"
-        >
+        <div className="px-4 py-2 border rounded-2xl hover:to-blue-200transition duration-200">
           <div className="flex space-x-1 justify-between items-center w-[570px]">
             <div className="flex justify-center items-center space-x-1">
               <button className="hover:bg-opacity-50 transition-all duration-1000 bg-opacity-0">
