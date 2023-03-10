@@ -5,16 +5,20 @@ export default function Navbar() {
 
   return (
     <div className="flex justify-center">
-      <div className="border-black items-center text-black bg-gradient-to-r from-blue-700 to-indigo-800 fixed w-full shadow-2xl h-[70px] flex justify-center space-x-20">
+      <div
+        className={
+          "border-black items-center bg-gradient-to-r from-blue-700 to-indigo-800 fixed w-full shadow-2xl h-[70px] flex justify-center space-x-20 font-montserrat "
+        }
+      >
         <button
           onClick={() => navigate("/")}
-          className="w-[100px] h-[30px] border border-white rounded-2xl text-white"
+          className="w-[100px] h-[30px] border-2 rounded-2xl text-slate-200"
         >
           Home
         </button>
         <button
           onClick={() => navigate("/create")}
-          className="w-[100px] h-[30px] border border-white rounded-2xl text-white"
+          className="w-[100px] h-[30px] border-2  rounded-2xl text-slate-200"
         >
           Twutt
         </button>
