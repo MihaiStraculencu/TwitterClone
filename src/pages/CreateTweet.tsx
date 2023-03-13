@@ -12,6 +12,7 @@ const CreateTweet = () => {
   const onSubmit: SubmitHandler<Input> = (data) => {
     setDoc(doc(db, "tweets", uuid()), {
       body: data.body,
+      deleted: false,
     })
       .then(() => navigate(`/`))
       .catch((err) => console.log(`tweet creation failed with error: ${err}`));
