@@ -7,15 +7,17 @@ import {
   deleteDoc,
   query,
   where,
+  onSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db, deleteTweet } from "../../firebase";
 import { IoShareOutline } from "react-icons/io5";
 import { IoHeartOutline } from "react-icons/io5";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { IconContext } from "react-icons/lib/esm/iconContext";
-import { uuid } from "uuidv4";
+import { db } from "../../firebase";
+import { useNavigate } from "react-router";
 
 export default function Tweets() {
   const [tweets, setTweets] = useState<any[]>([]);
@@ -29,7 +31,8 @@ export default function Tweets() {
         const docsArray: any[] = [];
 
         querySnapshot.forEach((doc) => {
-          docsArray.push(doc.data());
+          console.log(doc);
+          docsArray.push({ ...doc.data(), id: doc.id });
         });
 
         setTweets(docsArray);
@@ -38,7 +41,7 @@ export default function Tweets() {
   }, []);
 
   return (
-    <div className="space-y-8 pt-32">
+    <div>
       {tweets.length ? (
         tweets.map((doc: any) => <Tweet doc={doc} />)
       ) : (
@@ -54,9 +57,9 @@ function Tweet({ doc }: { doc: any }) {
   console.log(doc);
 
   return (
-    <div className="h-[400px] flex justify-center">
+    <div className="flex justify-center">
       <div className="px-4 py-2 border rounded-2xl bg-white flex flex-col justify-between">
-        <div className="flex space-x-1 text-black justify-between items-center w-[520px]">
+        <div className="flex text-black justify-between items-center w-[500px]">
           <div className="flex justify-center items-center space-x-1">
             <button className="hover:bg-opacity-50 transition-all duration-1000 bg-opacity-0">
               <img
@@ -72,7 +75,7 @@ function Tweet({ doc }: { doc: any }) {
               <div className="text-xs text-black ">@straculencumihai</div>
             </div>
           </div>
-          <CardMenu />
+          <CardMenu id={doc.id} />
         </div>
         <div className="p-4 font-montserrat text-lg break-words resize-none w-[500px] h-[300px]">
           {doc.body}
@@ -118,19 +121,21 @@ function Likereplyshare() {
   );
 }
 
-function CardMenu() {
+function CardMenu({ id }: { id: string }) {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const handleDelete = () => {};
-
-  const handleOpen = () => {
-    setOpen(!open);
+  const handleDelete = () => {
+    const tweetRef = doc(db, "tweets", id);
+    updateDoc(tweetRef, { deleted: true })
+      .then(() => console.log(`DELETED SUCCESFULLY: ${id}`))
+      .catch((err) => console.log(`failed with error ${err}`));
   };
 
   return (
     <div className="relative">
       <button
-        onClick={handleOpen}
+        onClick={() => setOpen(!open)}
         className="hover:bg-slate-100 rounded-xl flex items-center h-[40px] transition ease-out duration-150"
       >
         <IconContext.Provider
@@ -144,7 +149,10 @@ function CardMenu() {
       </button>
       {open ? (
         <div className="absolute flex flex-col right-0 w-40 rounded-md shadow-lg border-2 border-slate-100">
-          <button className="text-gray-700 px-4 py-2 text-sm hover:bg-slate-100">
+          <button
+            onClick={() => navigate(`/edit/${id}`)}
+            className="text-gray-700 px-4 py-2 text-sm hover:bg-slate-100"
+          >
             Edit
           </button>
           <button
