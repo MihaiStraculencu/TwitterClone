@@ -25,8 +25,8 @@ const CreateTweet = () => {
   } = useForm<Input>();
 
   return (
-    <div className="flex justify-center py-32">
-      <div className="bg-white text-black text-2xl h-[400px] w-[560px] flex rounded-xl justify-center hover:bg-gray-100 transition duration-200 border border-gray-300">
+    <div className="flex justify-center">
+      <div className="bg-white text-black text-2xl h-[400px] w-[500px] flex rounded-xl justify-center border">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="w-full flex flex-col px-8 space-y-2"
@@ -35,7 +35,7 @@ const CreateTweet = () => {
             <textarea
               {...register("body", { required: true })}
               onChange={(e: any) => setInput(e.target.value)}
-              maxLength={550}
+              maxLength={380}
               className="h-[250px] appearance-none bg-transparent border-none w-full text-gray-700  py-1 px-2 leading-tight focus:outline-none text-lg verflow-y-scroll no-scrollbar resize-none"
               placeholder="What's happening?"
             />
@@ -49,11 +49,10 @@ const CreateTweet = () => {
                 </span>
               )}
             </div>
-
             <div className="flex flex-col space-y-4 justify-end">
-              <div>{input.length}/550</div>
+              <div>{input.length}/380</div>
               <button
-                className="w-[80px] bg-blue-500 hover:bg-blue-700 hover:border-blue-700 text-sm text-slate-100 py-2 px-2 rounded-2xl font-bold cursor-pointer"
+                className="w-[80px] bg-blue-500 hover:bg-blue-700 hover:border-blue-700 text-sm text-slate-100 py-2 px-2 rounded-2xl font-bold"
                 type="submit"
               >
                 Tweet
