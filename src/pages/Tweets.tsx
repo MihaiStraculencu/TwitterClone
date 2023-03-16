@@ -1,136 +1,125 @@
 import {
   collection,
-  doc,
-  getDoc,
-  getDocs,
-  Firestore,
   deleteDoc,
+  doc,
+  getDocs,
   query,
-  where,
-  onSnapshot,
   updateDoc,
-} from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { IoShareOutline } from "react-icons/io5";
-import { IoHeartOutline } from "react-icons/io5";
-import { IoChatboxEllipsesOutline } from "react-icons/io5";
-import { BiDotsVerticalRounded } from "react-icons/bi";
-import { IconContext } from "react-icons/lib/esm/iconContext";
-import { db } from "../../firebase";
-import { useNavigate } from "react-router";
+  where,
+} from 'firebase/firestore'
+import { useEffect, useState } from 'react'
+import { db } from '../../firebase'
+import { BiDotsVerticalRounded } from 'react-icons/bi'
+import { IconContext } from 'react-icons/lib/esm/iconContext'
+import { useGetCurrentUser } from '../hooks/useGetCurrentUser'
+import { useNavigate } from 'react-router-dom'
+import { useGetUser } from '../hooks/useGetUser'
 
 export default function Tweets() {
-  const [tweets, setTweets] = useState<any[]>([]);
+  const [tweets, setTweets] = useState<any[]>([])
+  const [loader, setLoader] = useState(true)
+  const navigate = useNavigate()
+  const user = useGetCurrentUser()
 
   useEffect(() => {
-    const tweetsRef = collection(db, "tweets");
-    const q = query(tweetsRef, where("deleted", "==", false));
+    const tweetsRef = collection(db, 'tweets')
+    const q = query(tweetsRef, where('deleted', '==', false))
 
     getDocs(q)
       .then((querySnapshot) => {
-        const docsArray: any[] = [];
+        const docsArray: any[] = []
 
         querySnapshot.forEach((doc) => {
-          console.log(doc);
-          docsArray.push({ ...doc.data(), id: doc.id });
-        });
+          docsArray.push({ ...doc.data(), id: doc.id })
+        })
 
-        setTweets(docsArray);
+        setTweets(docsArray)
+        setLoader(false)
       })
-      .catch((err) => console.log(err));
-  }, []);
+      .catch((err) => console.log(err))
+  }, [])
+
+  if (loader)
+    return (
+      <div className="flex justify-center items-center pt-32 text-white">Loading...</div>
+    )
 
   return (
-    <div>
+    <div className="space-y-8 flex flex-col justify-center items-center pt-20">
       {tweets.length ? (
-        tweets.map((doc: any) => <Tweet doc={doc} />)
+        tweets.map((tweet: any) => <Tweet key={tweet.body} tweet={tweet} />)
       ) : (
-        <text className="flex justify-center items-center">
-          <h1 className="text-white">No tweets</h1>
-        </text>
+        <div className="flex justify-center items-center">
+          <span className="text-white">No tweets</span>
+        </div>
       )}
+      {user ? (
+        <button
+          onClick={() => navigate('/create')}
+          className="px-4 h-[30px] border-2 rounded-2xl text-slate-200"
+        >
+          New Twutt
+        </button>
+      ) : null}
     </div>
-  );
+  )
 }
 
-function Tweet({ doc }: { doc: any }) {
-  console.log(doc);
+function Tweet({ tweet }: { tweet: any }) {
+  const currentUser = useGetCurrentUser()
+  const user = useGetUser(tweet.author)
+  const authorIsCurrentUser = currentUser ? currentUser.email === tweet.author : false
+  const atName =
+    user && user.firstName && user.lastName
+      ? `@${user.firstName} ${user.lastName}`.replace(' ', '')
+      : `@${tweet.author.split('@')[0]}`
 
   return (
-    <div className="flex justify-center">
-      <div className="px-4 py-2 border rounded-2xl bg-white flex flex-col justify-between">
-        <div className="flex text-black justify-between items-center w-[500px]">
-          <div className="flex justify-center items-center space-x-1">
-            <button className="hover:bg-opacity-50 transition-all duration-1000 bg-opacity-0">
+    <div className="h-[400px] flex justify-center">
+      <div className="px-4 py-2 border rounded-2xl bg-white flex flex-col ">
+        <div className="flex space-x-1 text-black justify-between items-center w-[520px]">
+          <div className="flex justify-center items-center space-x-4">
+            <div className="hover:bg-opacity-50 transition-all duration-1000 bg-opacity-0 cursor-pointer">
               <img
-                src="images/profile.jpg"
+                src={
+                  user?.profilePicture
+                    ? user?.profilePicture
+                    : 'images/placeholder-avatar.jpeg'
+                }
                 alt="avatar"
                 className="inline-block h-12 w-12 rounded-full object-cover transition duration-100 hover:grayscale-[50%]"
               />
-            </button>
+            </div>
+
             <div className="flex flex-col">
               <button className="text-base text-black font-semibold hover:underline">
-                Straculencu Mihai
+                {tweet.author}
               </button>
-              <div className="text-xs text-black ">@straculencumihai</div>
+              <div className="text-xs text-black ">{atName}</div>
             </div>
           </div>
-          <CardMenu id={doc.id} />
+
+          {authorIsCurrentUser ? <CardMenu id={tweet.id} /> : null}
         </div>
+
         <div className="p-4 font-montserrat text-lg break-words resize-none w-[500px] h-[300px]">
-          {doc.body}
-        </div>
-        <div className="flex justify-center py-4">
-          <Likereplyshare />
+          {tweet.body}
         </div>
       </div>
     </div>
-  );
-}
-
-function Cardtd() {
-  return (
-    <div>
-      <button className="pb-2 ">
-        <div className="flex space-x-2 text-sm text-slate-600 hover:underline underline-offset-2">
-          <div>14:30</div>
-          <div>Feb 28, 2023</div>
-        </div>
-      </button>
-    </div>
-  );
-}
-
-function Likereplyshare() {
-  return (
-    <div className="flex justify-center py-2 space-x-5 items-end">
-      <button className="flex items-center justify-center space-x-1 underline-offset-2 rounded-xl hover:border-2 hover:bg-red-200 h-[30px] w-[60px]">
-        <IoHeartOutline />
-        <div className="text-sm font-bold text-slate-600">34</div>
-      </button>
-      <button className="flex items-center justify-center space-x-1 underline-offset-2 rounded-xl hover:border-2 hover:bg-cyan-100 h-[30px] w-[80px]">
-        <IoChatboxEllipsesOutline />
-        <div className="text-sm font-bold text-slate-600">Reply</div>
-      </button>
-      <button className="flex items-center justify-center space-x-1 underline-offset-2 rounded-xl hover:border-2 hover:bg-green-200 h-[30px] w-[110px]">
-        <IoShareOutline />
-
-        <div className="text-sm font-bold text-slate-600">Share link</div>
-      </button>
-    </div>
-  );
+  )
 }
 
 function CardMenu({ id }: { id: string }) {
-  const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
 
   const handleDelete = () => {
-    const tweetRef = doc(db, "tweets", id);
+    const tweetRef = doc(db, 'tweets', id)
     updateDoc(tweetRef, { deleted: true })
       .then(() => console.log(`DELETED SUCCESFULLY: ${id}`))
-      .catch((err) => console.log(`failed with error ${err}`));
-  };
+      .catch((err) => console.log(`failed with error ${err}`))
+  }
 
   return (
     <div className="relative">
@@ -140,8 +129,8 @@ function CardMenu({ id }: { id: string }) {
       >
         <IconContext.Provider
           value={{
-            color: "black",
-            size: "25",
+            color: 'black',
+            size: '25',
           }}
         >
           <BiDotsVerticalRounded />
@@ -156,7 +145,11 @@ function CardMenu({ id }: { id: string }) {
             Edit
           </button>
           <button
-            onClick={handleDelete}
+            onClick={() => {
+              deleteDoc(doc(db, 'tweets', id)).then(() => {
+                window.location.reload()
+              })
+            }}
             className="text-gray-700 px-4 py-2 text-sm hover:bg-slate-100"
           >
             Delete Tweet
@@ -166,5 +159,5 @@ function CardMenu({ id }: { id: string }) {
         <div></div>
       )}
     </div>
-  );
+  )
 }
