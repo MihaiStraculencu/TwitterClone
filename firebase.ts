@@ -1,9 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { doc, getFirestore } from "firebase/firestore";
-import { deleteDoc } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA8cgbI5FoDjavQGrlYkgTVDbmYi3-ow3w",
@@ -14,9 +13,8 @@ const firebaseConfig = {
   appId: "1:61945640457:web:080468b6385d9c7590aad8",
 };
 
+// Create a root reference
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
-
-export function deleteTweet(id: any) {
-  deleteDoc(doc(db, "tweets", id));
-}
+export const auth = getAuth(app);
+export const storage = getStorage();
