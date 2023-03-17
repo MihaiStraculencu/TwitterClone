@@ -1,10 +1,15 @@
-import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { ChangeEvent, useEffect, useState } from 'react'
-import { useGetCurrentUser } from '../hooks/useGetCurrentUser'
-import Cropper from 'react-easy-crop'
-import { deleteObject, getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { db, storage } from '../../firebase'
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { ChangeEvent, useEffect, useState } from "react";
+import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
+import Cropper from "react-easy-crop";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
+import { db, storage } from "../../firebase";
 import {
   collection,
   doc,
@@ -13,48 +18,48 @@ import {
   query,
   updateDoc,
   where,
-} from 'firebase/firestore'
-import cookie from 'cookiejs'
+} from "firebase/firestore";
+import cookie from "cookiejs";
 
 export const Profile = () => {
-  const navigate = useNavigate()
-  const [userRef, setUserRef] = useState<any>()
-  const userEmail = cookie.get('user')
-  const user = useGetCurrentUser()
+  const navigate = useNavigate();
+  const [userRef, setUserRef] = useState<any>();
+  const userEmail = cookie.get("user");
+  const user = useGetCurrentUser();
 
   useEffect(() => {
-    !userEmail && navigate('/')
-  }, [userEmail])
+    !userEmail && navigate("/");
+  }, [userEmail]);
 
-  if (!userEmail) navigate('/login')
+  if (!userEmail) navigate("/login");
 
-  const [uploadedFile, setUploadedFile] = useState<File | null>()
+  const [uploadedFile, setUploadedFile] = useState<File | null>();
 
   useEffect(() => {
-    const usersCollectionRef = collection(db, 'users')
-    const q = query(usersCollectionRef, where('email', '==', userEmail))
+    const usersCollectionRef = collection(db, "users");
+    const q = query(usersCollectionRef, where("email", "==", userEmail));
 
     getDocs(q).then((querySnapshot) => {
       querySnapshot.forEach((docRef) => {
-        setUserRef(doc(db, 'users', docRef.id))
-      })
-    })
-  }, [])
+        setUserRef(doc(db, "users", docRef.id));
+      });
+    });
+  }, []);
 
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit } = useForm();
 
   const uploadNewAvatarImage = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setUploadedFile(event.target.files[0])
+      setUploadedFile(event.target.files[0]);
     }
-  }
+  };
 
   const handleUploadClick = () => {
     if (!uploadedFile) {
-      return
+      return;
     }
 
-    const profilePictureRef = ref(storage, `${userEmail}-profile.jpg`)
+    const profilePictureRef = ref(storage, `${userEmail}-profile.jpg`);
 
     uploadBytes(profilePictureRef, uploadedFile).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
@@ -62,15 +67,15 @@ export const Profile = () => {
           profilePicture: url,
         })
           .then(() => {
-            console.log('updated profile pic successfully')
-            window.location.reload()
+            console.log("updated profile pic successfully");
+            window.location.reload();
           })
           .catch((error) => {
-            console.log("couldn't update profile pic", error)
-          })
-      })
-    })
-  }
+            console.log("couldn't update profile pic", error);
+          });
+      });
+    });
+  };
 
   return (
     <div className="flex flex-col justify-center items-center pt-20">
@@ -82,13 +87,17 @@ export const Profile = () => {
                 src={
                   user?.profilePicture
                     ? user?.profilePicture
-                    : 'images/placeholder-avatar.jpeg'
+                    : "images/placeholder-avatar.jpeg"
                 }
                 alt="avatar"
-                className="inline-block h-12 w-12 rounded-full object-cover transition duration-100 hover:grayscale-[50%]"
+                className="inline-block h-12 w-12 rounded-full object-cover"
               />
 
-              <input className="w-[55%]" type="file" onChange={uploadNewAvatarImage} />
+              <input
+                className="w-[55%]"
+                type="file"
+                onChange={uploadNewAvatarImage}
+              />
 
               {uploadedFile ? (
                 <button
@@ -108,17 +117,17 @@ export const Profile = () => {
                 lastName: data.lastName,
               })
                 .then(() => {
-                  console.log('updated profile pic successfully')
-                  window.location.reload()
+                  console.log("updated profile pic successfully");
+                  window.location.reload();
                 })
                 .catch((error) => {
-                  console.log("couldn't update profile pic", error)
-                })
+                  console.log("couldn't update profile pic", error);
+                });
             })}
             className="flex flex-col space-y-4"
           >
             <input
-              {...register('firstName', {
+              {...register("firstName", {
                 required: true,
                 value: user?.firstName,
               })}
@@ -129,7 +138,7 @@ export const Profile = () => {
               className="h-10 focus:outline-none border-b-2 bg-transparent"
             />
             <input
-              {...register('lastName', {
+              {...register("lastName", {
                 required: true,
                 value: user?.lastName,
               })}
@@ -139,12 +148,15 @@ export const Profile = () => {
               placeholder="Last name"
               className="h-10 focus:outline-none border-b-2 bg-transparent"
             />
-            <button type="submit" className="p-2 bg-blue-500 text-white rounded">
+            <button
+              type="submit"
+              className="p-2 bg-blue-500 text-white rounded"
+            >
               Edit
             </button>
           </form>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
