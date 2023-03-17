@@ -1,4 +1,4 @@
-import React from "react";
+import { useNavigate } from "react-router";
 
 export default function Footer() {
   return (
@@ -6,9 +6,6 @@ export default function Footer() {
       <div className="flex space-x-5">
         <div className="text-center text-slate-300 hover:cursor-pointer hover:underline">
           © 2023 Copyright: Twuttur
-        </div>
-        <div className="text-slate-300 hover:cursor-pointer hover:underline">
-          About
         </div>
       </div>
     </div>

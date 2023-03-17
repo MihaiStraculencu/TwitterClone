@@ -6,43 +6,45 @@ import {
   query,
   updateDoc,
   where,
-} from 'firebase/firestore'
-import { useEffect, useState } from 'react'
-import { db } from '../../firebase'
-import { BiDotsVerticalRounded } from 'react-icons/bi'
-import { IconContext } from 'react-icons/lib/esm/iconContext'
-import { useGetCurrentUser } from '../hooks/useGetCurrentUser'
-import { useNavigate } from 'react-router-dom'
-import { useGetUser } from '../hooks/useGetUser'
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from "../../firebase";
+import { BiDotsVerticalRounded } from "react-icons/bi";
+import { IconContext } from "react-icons/lib/esm/iconContext";
+import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
+import { useNavigate } from "react-router-dom";
+import { useGetUser } from "../hooks/useGetUser";
 
 export default function Tweets() {
-  const [tweets, setTweets] = useState<any[]>([])
-  const [loader, setLoader] = useState(true)
-  const navigate = useNavigate()
-  const user = useGetCurrentUser()
+  const [tweets, setTweets] = useState<any[]>([]);
+  const [loader, setLoader] = useState(true);
+  const navigate = useNavigate();
+  const user = useGetCurrentUser();
 
   useEffect(() => {
-    const tweetsRef = collection(db, 'tweets')
-    const q = query(tweetsRef, where('deleted', '==', false))
+    const tweetsRef = collection(db, "tweets");
+    const q = query(tweetsRef, where("deleted", "==", false));
 
     getDocs(q)
       .then((querySnapshot) => {
-        const docsArray: any[] = []
+        const docsArray: any[] = [];
 
         querySnapshot.forEach((doc) => {
-          docsArray.push({ ...doc.data(), id: doc.id })
-        })
+          docsArray.push({ ...doc.data(), id: doc.id });
+        });
 
-        setTweets(docsArray)
-        setLoader(false)
+        setTweets(docsArray);
+        setLoader(false);
       })
-      .catch((err) => console.log(err))
-  }, [])
+      .catch((err) => console.log(err));
+  }, []);
 
   if (loader)
     return (
-      <div className="flex justify-center items-center pt-32 text-white">Loading...</div>
-    )
+      <div className="flex justify-center items-center pt-32 text-white">
+        Loading...
+      </div>
+    );
 
   return (
     <div className="space-y-8 flex flex-col justify-center items-center pt-20">
@@ -55,46 +57,48 @@ export default function Tweets() {
       )}
       {user ? (
         <button
-          onClick={() => navigate('/create')}
+          onClick={() => navigate("/create")}
           className="px-4 h-[30px] border-2 rounded-2xl text-slate-200"
         >
           New Twutt
         </button>
       ) : null}
     </div>
-  )
+  );
 }
 
 function Tweet({ tweet }: { tweet: any }) {
-  const currentUser = useGetCurrentUser()
-  const user = useGetUser(tweet.author)
-  const authorIsCurrentUser = currentUser ? currentUser.email === tweet.author : false
+  const currentUser = useGetCurrentUser();
+  const user = useGetUser(tweet.author);
+  const authorIsCurrentUser = currentUser
+    ? currentUser.email === tweet.author
+    : false;
   const atName =
     user && user.firstName && user.lastName
-      ? `@${user.firstName} ${user.lastName}`.replace(' ', '')
-      : `@${tweet.author.split('@')[0]}`
+      ? `@${user.firstName} ${user.lastName}`.replace(" ", "")
+      : `@${tweet.author.split("@")[0]}`;
 
   return (
     <div className="h-[400px] flex justify-center">
       <div className="px-4 py-2 border rounded-2xl bg-white flex flex-col ">
         <div className="flex space-x-1 text-black justify-between items-center w-[520px]">
           <div className="flex justify-center items-center space-x-4">
-            <div className="hover:bg-opacity-50 transition-all duration-1000 bg-opacity-0 cursor-pointer">
+            <div className="hover:bg-opacity-50 transition-all duration-1000 bg-opacity-0">
               <img
                 src={
                   user?.profilePicture
                     ? user?.profilePicture
-                    : 'images/placeholder-avatar.jpeg'
+                    : "images/placeholder-avatar.jpeg"
                 }
                 alt="avatar"
-                className="inline-block h-12 w-12 rounded-full object-cover transition duration-100 hover:grayscale-[50%]"
+                className="inline-block h-12 w-12 rounded-full object-cover"
               />
             </div>
 
             <div className="flex flex-col">
-              <button className="text-base text-black font-semibold hover:underline">
+              <div className="text-base text-black font-semibold">
                 {tweet.author}
-              </button>
+              </div>
               <div className="text-xs text-black ">{atName}</div>
             </div>
           </div>
@@ -107,19 +111,19 @@ function Tweet({ tweet }: { tweet: any }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function CardMenu({ id }: { id: string }) {
-  const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleDelete = () => {
-    const tweetRef = doc(db, 'tweets', id)
+    const tweetRef = doc(db, "tweets", id);
     updateDoc(tweetRef, { deleted: true })
       .then(() => console.log(`DELETED SUCCESFULLY: ${id}`))
-      .catch((err) => console.log(`failed with error ${err}`))
-  }
+      .catch((err) => console.log(`failed with error ${err}`));
+  };
 
   return (
     <div className="relative">
@@ -129,15 +133,15 @@ function CardMenu({ id }: { id: string }) {
       >
         <IconContext.Provider
           value={{
-            color: 'black',
-            size: '25',
+            color: "black",
+            size: "25",
           }}
         >
           <BiDotsVerticalRounded />
         </IconContext.Provider>
       </button>
       {open ? (
-        <div className="absolute flex flex-col right-0 w-40 rounded-md shadow-lg border-2 border-slate-100">
+        <div className="absolute flex flex-col right-0 w-40 rounded-md shadow-lg border-2 border-slate-100 bg-white">
           <button
             onClick={() => navigate(`/edit/${id}`)}
             className="text-gray-700 px-4 py-2 text-sm hover:bg-slate-100"
@@ -146,9 +150,9 @@ function CardMenu({ id }: { id: string }) {
           </button>
           <button
             onClick={() => {
-              deleteDoc(doc(db, 'tweets', id)).then(() => {
-                window.location.reload()
-              })
+              deleteDoc(doc(db, "tweets", id)).then(() => {
+                window.location.reload();
+              });
             }}
             className="text-gray-700 px-4 py-2 text-sm hover:bg-slate-100"
           >
@@ -159,5 +163,5 @@ function CardMenu({ id }: { id: string }) {
         <div></div>
       )}
     </div>
-  )
+  );
 }
