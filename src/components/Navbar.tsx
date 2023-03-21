@@ -10,7 +10,7 @@ export default function Navbar() {
     <div className="flex justify-center sticky top-0 z-50 pb-16">
       <div
         className={
-          "border-black items-center bg-indigo-700 fixed w-full shadow-2xl  flex justify-center font-montserrat py-4"
+          "border-black items-center bg-indigo-700  opacity-95 fixed w-full shadow-2xl  flex justify-center font-montserrat py-4"
         }
       >
         <div className="flex flex-col space-y-4  items-center">
