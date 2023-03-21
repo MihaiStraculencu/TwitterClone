@@ -1,32 +1,33 @@
-import { doc, setDoc } from 'firebase/firestore'
-import { useState } from 'react'
-import { v4 as uuid } from 'uuid'
-import { useNavigate } from 'react-router'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { db } from '../../firebase'
-import { useGetCurrentUser } from '../hooks/useGetCurrentUser'
+import { doc, setDoc } from "firebase/firestore";
+import { useState } from "react";
+import { v4 as uuid } from "uuid";
+import { useNavigate } from "react-router";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { db } from "../../firebase";
+import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 
 const CreateTweet = () => {
-  const [input, setInput] = useState('')
-  const navigate = useNavigate()
-  const user = useGetCurrentUser()
+  const [input, setInput] = useState("");
+  const navigate = useNavigate();
+  const user = useGetCurrentUser();
+  const date = new Date().toDateString();
 
   const onSubmit: SubmitHandler<Input> = (data) => {
-    setDoc(doc(db, 'tweets', uuid()), {
+    setDoc(doc(db, "tweets", uuid()), {
       createdAt: new Date(),
       body: data.body,
       author: user.email,
       deleted: false,
     })
       .then(() => navigate(`/`))
-      .catch((err) => console.log(`tweet creation failed with error: ${err}`))
-  }
+      .catch((err) => console.log(`tweet creation failed with error: ${err}`));
+  };
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Input>()
+  } = useForm<Input>();
 
   return (
     <div className="flex justify-center pt-20">
@@ -37,7 +38,7 @@ const CreateTweet = () => {
         >
           <div className="flex flex-col items-end border-b border-blue-200 py-6 px-2 space-y-2">
             <textarea
-              {...register('body', { required: true })}
+              {...register("body", { required: true })}
               onChange={(e: any) => setInput(e.target.value)}
               maxLength={380}
               className="h-[250px] appearance-none bg-transparent border-none w-full text-gray-700  py-1 px-2 leading-tight focus:outline-none text-lg verflow-y-scroll no-scrollbar resize-none"
@@ -52,6 +53,7 @@ const CreateTweet = () => {
                   This field is required
                 </span>
               )}
+              <div>{date}</div>
             </div>
             <div className="flex flex-col space-y-4 justify-end">
               <div>{input.length}/380</div>
@@ -66,9 +68,9 @@ const CreateTweet = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-type Input = { body: string }
+type Input = { body: string };
 
-export default CreateTweet
+export default CreateTweet;

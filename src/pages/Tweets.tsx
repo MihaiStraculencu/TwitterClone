@@ -33,7 +33,9 @@ export default function Tweets() {
           docsArray.push({ ...doc.data(), id: doc.id });
         });
 
-        setTweets(docsArray);
+        setTweets(
+          docsArray.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)
+        );
         setLoader(false);
       })
       .catch((err) => console.log(err));

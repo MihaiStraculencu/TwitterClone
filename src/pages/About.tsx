@@ -23,26 +23,28 @@ export default function About() {
           </div>
           <h1 className="font-bold text-2xl pt-12">Contact:</h1>
           <div className="grid border-2 rounded-lg border-black p-5 grid-cols-2 gap-8 pl-36 shadow-2xl">
-            <div className="flex items-center space-x-2">
-              <a href="https://www.linkedin.com/in/straculencu-mihai/">
-                <img src="images/linkedin.png" className="w-10" />
-              </a>
-              <p>Straculencu Mihai</p>
-            </div>
-            <div className="flex items-center space-x-2">
-              <a href="https://github.com/MihaiStraculencu">
-                <img src="images/github.png" className="w-10" />
-              </a>
-              <p>MihaiStraculencu</p>
-            </div>
-            <div className="flex items-center space-x-2">
+            <a
+              className="flex items-center space-x-2 hover:underline"
+              target="_blank"
+              href="https://www.linkedin.com/in/straculencu-mihai/"
+            >
+              <img src="images/linkedin.png" className="w-10" />
+
+              <div>Straculencu Mihai</div>
+            </a>
+            <a
+              className="flex items-center space-x-2 hover:underline"
+              target="_blank"
+              href="https://github.com/MihaiStraculencu"
+            >
+              <img src="images/github.png" className="w-10" />
+              <div>MihaiStraculencu</div>
+            </a>
+
+            <span className="flex items-center space-x-2">
               <img src="images/gmail.png" className="w-10" />
-              <p>mihaistraculencu83@gmail.com</p>
-            </div>
-            <div className="flex items-center space-x-3">
-              <BsFillTelephoneFill size={36} />
-              <p>+40-0726688874</p>
-            </div>
+              <div>mihaistraculencu83@gmail.com</div>
+            </span>
           </div>
         </div>
       </div>
