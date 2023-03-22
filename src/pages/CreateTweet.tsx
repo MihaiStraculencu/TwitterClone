@@ -30,43 +30,39 @@ const CreateTweet = () => {
   } = useForm<Input>();
 
   return (
-    <div className="flex justify-center pt-20">
-      <div className="bg-white text-black text-2xl h-[400px] w-[520px] flex rounded-xl justify-center border">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="w-full flex flex-col px-8 space-y-2"
-        >
-          <div className="flex flex-col items-end border-b border-blue-200 py-6 px-2 space-y-2">
-            <textarea
-              {...register("body", { required: true })}
-              onChange={(e: any) => setInput(e.target.value)}
-              maxLength={380}
-              className="h-[250px] appearance-none bg-transparent border-none w-full text-gray-700  py-1 px-2 leading-tight focus:outline-none text-lg verflow-y-scroll no-scrollbar resize-none"
-              placeholder="What's happening?"
-            />
-          </div>
+    <div className="h-[400px] w-[600px] py-2 border rounded-2xl bg-white flex flex-col">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col p-6 space-y-2"
+      >
+        <textarea
+          {...register("body", { required: true })}
+          onChange={(e: any) => setInput(e.target.value)}
+          maxLength={380}
+          className="h-[250px] appearance-none bg-transparent border-none text-gray-700 py-1 leading-tight focus:outline-none text-lg verflow-y-scroll no-scrollbar resize-none"
+          placeholder="What's happening?"
+        />
 
-          <div className="text-gray-600 text-lg text-end flex justify-between">
-            <div>
-              {errors.body && (
-                <span className=" ease-out transition duration-500">
-                  This field is required
-                </span>
-              )}
-              <div>{date}</div>
-            </div>
-            <div className="flex flex-col space-y-4 justify-end">
-              <div>{input.length}/380</div>
-              <button
-                className="w-[80px] bg-blue-500 hover:bg-blue-700 hover:border-blue-700 text-sm text-slate-100 py-2 px-2 rounded-2xl font-bold"
-                type="submit"
-              >
-                Tweet
-              </button>
-            </div>
+        <div className="text-gray-600 text-lg text-end flex justify-between">
+          <div>
+            {errors.body && (
+              <span className=" ease-out transition duration-500">
+                This field is required
+              </span>
+            )}
+            <div className="pr-3 flex flex-wrap">{date}</div>
           </div>
-        </form>
-      </div>
+          <div className="flex flex-col space-y-4 justify-end">
+            <div>{input.length}/380</div>
+            <button
+              className="w-[80px] bg-blue-500 hover:bg-blue-700 hover:border-blue-700 text-sm text-slate-100 py-2 rounded-2xl font-bold"
+              type="submit"
+            >
+              Tweet
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   );
 };

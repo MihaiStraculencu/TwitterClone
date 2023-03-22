@@ -49,14 +49,7 @@ export default function Tweets() {
     );
 
   return (
-    <div className="space-y-8 flex flex-col justify-center items-center pt-20">
-      {tweets.length ? (
-        tweets.map((tweet: any) => <Tweet key={tweet.body} tweet={tweet} />)
-      ) : (
-        <div className="flex justify-center items-center">
-          <span className="text-white">No tweets</span>
-        </div>
-      )}
+    <div className="space-y-8 w-[640px] flex flex-col justify-center items-center">
       {user ? (
         <button
           onClick={() => navigate("/create")}
@@ -65,6 +58,13 @@ export default function Tweets() {
           New Twutt
         </button>
       ) : null}
+      {tweets.length ? (
+        tweets.map((tweet: any) => <Tweet key={tweet.body} tweet={tweet} />)
+      ) : (
+        <div className="flex justify-center items-center">
+          <span className="text-white">No tweets</span>
+        </div>
+      )}
     </div>
   );
 }
@@ -81,36 +81,34 @@ function Tweet({ tweet }: { tweet: any }) {
       : `@${tweet.author.split("@")[0]}`;
 
   return (
-    <div className="h-[400px] flex justify-center">
-      <div className="px-4 py-2 border rounded-2xl bg-white flex flex-col ">
-        <div className="flex space-x-1 text-black justify-between items-center w-[520px]">
-          <div className="flex justify-center items-center space-x-4">
-            <div className="hover:bg-opacity-50 transition-all duration-1000 bg-opacity-0">
-              <img
-                src={
-                  user?.profilePicture
-                    ? user?.profilePicture
-                    : "images/placeholder-avatar.jpeg"
-                }
-                alt="avatar"
-                className="inline-block h-12 w-12 rounded-full object-cover"
-              />
-            </div>
-
-            <div className="flex flex-col">
-              <div className="text-base text-black font-semibold">
-                {tweet.author}
-              </div>
-              <div className="text-xs text-black ">{atName}</div>
-            </div>
+    <div className="min-h-[400px] px-4 py-2 border rounded-2xl bg-white flex flex-col w-full">
+      <div className="flex space-x-1 text-black justify-between items-center">
+        <div className="flex justify-center items-center space-x-4">
+          <div>
+            <img
+              src={
+                user?.profilePicture
+                  ? user?.profilePicture
+                  : "images/placeholder-avatar.jpeg"
+              }
+              alt="avatar"
+              className="inline-block h-12 w-12 rounded-full object-cover"
+            />
           </div>
 
-          {authorIsCurrentUser ? <CardMenu id={tweet.id} /> : null}
+          <div className="flex flex-col">
+            <div className="text-base text-black font-semibold md:block hidden">
+              {tweet.author}
+            </div>
+            <div className="text-xs text-black ">{atName}</div>
+          </div>
         </div>
 
-        <div className="p-4 font-montserrat text-lg break-words resize-none w-[500px] h-[300px]">
-          {tweet.body}
-        </div>
+        {authorIsCurrentUser ? <CardMenu id={tweet.id} /> : null}
+      </div>
+
+      <div className="p-4 font-montserrat text-lg break-words resize-none">
+        {tweet.body}
       </div>
     </div>
   );

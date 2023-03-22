@@ -1,38 +1,8 @@
 import cookie from "cookiejs";
 import { useNavigate } from "react-router";
-import { auth } from "../../firebase";
-import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
+import { auth } from "../../../firebase";
 
-export default function Navbar() {
-  const user = useGetCurrentUser();
-
-  return (
-    <div className="flex justify-center sticky top-0 z-50 pb-16">
-      <div
-        className={
-          "border-black items-center bg-indigo-700  opacity-95 fixed w-full shadow-2xl  flex justify-center font-montserrat py-4"
-        }
-      >
-        <div className="flex flex-col space-y-4  items-center">
-          <div className="flex space-x-4">
-            <Home />
-            <NewTweet user={user} />
-            <About />
-            <Profile user={user} />
-            <Login user={user} />
-            <Logout user={user} />
-            <Signup user={user} />
-          </div>
-          {user ? (
-            <span className="text-white">Logged in as: {user.email}</span>
-          ) : null}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const Home = () => {
+export const Home = () => {
   const navigate = useNavigate();
 
   return (
@@ -45,7 +15,7 @@ const Home = () => {
   );
 };
 
-const Login = ({ user }: { user: string | null }) => {
+export const Login = ({ user }: { user: string | null }) => {
   const navigate = useNavigate();
 
   return (
@@ -62,7 +32,7 @@ const Login = ({ user }: { user: string | null }) => {
   );
 };
 
-const Logout = ({ user }: { user: string | null }) => {
+export const Logout = ({ user }: { user: string | null }) => {
   const navigate = useNavigate();
 
   return (
@@ -83,7 +53,7 @@ const Logout = ({ user }: { user: string | null }) => {
   );
 };
 
-const Signup = ({ user }: { user: string | null }) => {
+export const Signup = ({ user }: { user: string | null }) => {
   const navigate = useNavigate();
 
   return (
@@ -99,7 +69,8 @@ const Signup = ({ user }: { user: string | null }) => {
     </>
   );
 };
-const NewTweet = ({ user }: { user: string | null }) => {
+
+export const NewTweet = ({ user }: { user: string | null }) => {
   const navigate = useNavigate();
 
   return (
@@ -116,7 +87,7 @@ const NewTweet = ({ user }: { user: string | null }) => {
   );
 };
 
-const About = () => {
+export const About = () => {
   const navigate = useNavigate();
 
   return (
@@ -131,7 +102,7 @@ const About = () => {
   );
 };
 
-const Profile = ({ user }: { user: string | null }) => {
+export const Profile = ({ user }: { user: string | null }) => {
   const navigate = useNavigate();
 
   return (
