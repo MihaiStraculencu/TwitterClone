@@ -5,12 +5,12 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA8cgbI5FoDjavQGrlYkgTVDbmYi3-ow3w",
-  authDomain: "twitterclone-f0512.firebaseapp.com",
-  projectId: "twitterclone-f0512",
-  storageBucket: "twitterclone-f0512.appspot.com",
-  messagingSenderId: "61945640457",
-  appId: "1:61945640457:web:080468b6385d9c7590aad8",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 };
 
 // Create a root reference

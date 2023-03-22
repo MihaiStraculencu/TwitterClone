@@ -1,25 +1,25 @@
-import { useForm } from 'react-hook-form'
-import { auth, db } from '../../firebase'
-import { useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { useGetCurrentUser } from '../hooks/useGetCurrentUser'
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import cookie from 'cookiejs'
+import { useForm } from "react-hook-form";
+import { auth, db } from "../../firebase";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import cookie from "cookiejs";
 
 export const Login = () => {
-  const [authError, setAuthError] = useState<string | null>(null)
-  const navigate = useNavigate()
-  const user = useGetCurrentUser()
+  const [authError, setAuthError] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const user = useGetCurrentUser();
 
   useEffect(() => {
-    user && navigate('/')
-  }, [user])
+    user && navigate("/");
+  }, [user]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   return (
     <div className="flex flex-col justify-center items-center mt-32">
@@ -30,58 +30,68 @@ export const Login = () => {
             signInWithEmailAndPassword(auth, data.email, data.password)
               .then((credentials) => {
                 if (!credentials.user.email) {
-                  throw new Error('No user found after successfully logging in')
+                  throw new Error(
+                    "No user found after successfully logging in"
+                  );
                 }
-                cookie.set('user', credentials.user.email)
-                window.location.reload()
+
+                cookie.set("user", credentials.user.email, 1);
+
+                window.location.reload();
               })
               .catch((error) => {
-                const errorCode = error.code
-                const errorMessage = error.message
-                setAuthError(error.code)
-                console.log(errorCode, errorMessage)
-              })
+                const errorCode = error.code;
+                const errorMessage = error.message;
+
+                setAuthError(error.code);
+
+                console.log(errorCode, errorMessage);
+              });
           })}
         >
           <div className="text-lg">Login</div>
           <div className="flex flex-col">
             <input
-              {...register('email', { required: true, minLength: 6 })}
+              {...register("email", { required: true, minLength: 6 })}
               type="email"
               name="email"
               placeholder="Email"
               className="h-10 focus:outline-none border-b-2 bg-transparent"
             />
 
-            {errors.email?.type === 'required' && (
+            {errors.email?.type === "required" && (
               <span className="text-red-600 text-sm">Email is required</span>
             )}
           </div>
 
           <div className="flex flex-col">
             <input
-              {...register('password', { required: true, minLength: 6 })}
+              {...register("password", { required: true, minLength: 6 })}
               type="password"
               name="password"
               placeholder="Password"
               className="h-10 focus:outline-none border-b-2 bg-transparent"
             />
 
-            {errors.password?.type === 'minLength' && (
+            {errors.password?.type === "minLength" && (
               <span className="text-red-600 text-sm">
                 Minimum password length is 6 digits
               </span>
             )}
-            {errors.password?.type === 'required' && (
+            {errors.password?.type === "required" && (
               <span className="text-red-600 text-sm">Password is required</span>
             )}
           </div>
+
           <button type="submit" className="h-10 bg-blue-500 text-white rounded">
             Login
           </button>
-          {authError && <span className="text-red-600 text-sm">{authError}</span>}
+
+          {authError && (
+            <span className="text-red-600 text-sm">{authError}</span>
+          )}
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
