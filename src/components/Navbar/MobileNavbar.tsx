@@ -17,7 +17,7 @@ export default function MobileNavbar() {
   const user = useGetCurrentUser();
 
   return (
-    <div className="md:hidden flex flex-col w-[50%] justify-center relative pb-10">
+    <div className="md:hidden flex flex-col w-[50%] justify-center relative pb-20">
       <div className="fixed flex justify-end top-0 w-full z-50 bg-indigo-700 p-4">
         <div className="w-full flex justify-center text-3xl font-medium text-white pl-8">
           Twutt
@@ -28,14 +28,14 @@ export default function MobileNavbar() {
       </div>
 
       {open ? (
-        <div className="flex fixed flex-col items-center right-0 w-[35%] rounded-b-md shadow-lg top-[67px] transition ease-in-out delay-150 bg-indigo-600 space-y-5 z-50 pb-4 pt-4">
+        <div className="flex fixed flex-col items-center right-0 sm:w-[35%] rounded-b-md shadow-lg top-[67px] transition ease-in-out delay-150 bg-indigo-600 space-y-5 z-50 p-4">
           <Home />
           <NewTweet user={user} />
           <About />
           <Profile user={user} />
           <Login user={user} />
           <Logout user={user} />
-          <Signup user={user} />
+          {user && user.isAdmin ? <Signup user={user} /> : null}
         </div>
       ) : null}
     </div>

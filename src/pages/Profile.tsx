@@ -2,13 +2,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
-import Cropper from "react-easy-crop";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { db, storage } from "../../firebase";
 import {
   collection,
@@ -78,8 +72,8 @@ export const Profile = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center pt-20">
-      <div className="bg-white text-black  h-[400px] w-[520px] p-10 rounded-xl justify-center hover:bg-gray-100 transition duration-200 border border-gray-300">
+    <div className="w-[500px] flex flex-col justify-center items-center">
+      <div className="min-h-[300px] justify-center px-10 border rounded-2xl bg-white flex flex-col w-full">
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col h-14">
             <div className="flex items-center space-x-4">
