@@ -54,7 +54,7 @@ export default function Tweets() {
       {user ? (
         <button
           onClick={() => navigate("/create")}
-          className="transition ease-in-out delay-100 bg-indigo-500  hover:scale-110 duration-150 text-white rounded-lg p-3"
+          className="transition ease-in-out delay-100 bg-indigo-600 hover:scale-110 duration-150 text-white text-lg rounded-lg p-3"
         >
           New Tweet
         </button>
@@ -98,7 +98,6 @@ function Tweet({ tweet }: { tweet: any }) {
               className="inline-block h-12 w-12 rounded-full object-cover"
             />
           </div>
-
           <div className="flex flex-col">
             <div className="text-base text-black font-semibold md:block hidden">
               {tweet.author}
@@ -169,9 +168,7 @@ function CardMenu({ id }: { id: string }) {
             Delete Tweet
           </button>
         </div>
-      ) : (
-        <div></div>
-      )}
+      ) : null}
     </div>
   );
 }

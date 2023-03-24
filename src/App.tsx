@@ -12,7 +12,7 @@ import Tweets from "./pages/Tweets";
 import ResetPassword from "./pages/ResetPassword";
 
 const App = () => (
-  <div className="bg-gradient-to-tl from-sky-900 via-sky-900 to-indigo-900">
+  <div className="bg-[#456ced]">
     <BrowserRouter>
       <Navbar />
       <MobileNavbar />
