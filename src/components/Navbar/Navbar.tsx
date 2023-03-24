@@ -15,8 +15,6 @@ export default function Navbar() {
 
   const [user, setUser] = useState<any>(null);
 
-  console.log(user && user.isAdmin);
-
   useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
