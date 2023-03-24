@@ -55,7 +55,7 @@ const CreateTweet = () => {
           <div className="flex flex-col space-y-4 justify-end">
             <div>{input.length}/380</div>
             <button
-              className="w-[80px] bg-blue-500 hover:bg-blue-700 hover:border-blue-700 text-sm text-slate-100 py-2 rounded-2xl font-bold"
+              className="w-[80px] bg-indigo-500 hover:bg-indigo-700 text-sm text-white py-2 rounded-2xl font-bold"
               type="submit"
             >
               Tweet
