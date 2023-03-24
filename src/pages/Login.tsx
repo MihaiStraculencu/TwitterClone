@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { auth, db } from "../../firebase";
-import { useNavigate } from "react-router-dom";
+import { auth } from "../../firebase";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -22,10 +22,11 @@ export const Login = () => {
   } = useForm();
 
   return (
-    <div className="flex flex-col justify-center items-center mt-32">
-      <div className="bg-white text-black  min-h-[300px] w-[560px] pb-10 rounded-xl justify-center hover:bg-gray-100 transition duration-200 border border-gray-300">
+    <div className="space-y-8 w-[500px] flex flex-col justify-center items-center">
+      <div className=" border rounded-2xl pb-10 bg-white flex flex-col w-full p-6 gap-4">
+        <div className="text-lg">Login</div>
         <form
-          className="flex flex-col space-y-8 w-full h-full p-6 pb-0 text-gray-700"
+          className="flex flex-col space-y-8  pb-0 text-gray-700"
           onSubmit={handleSubmit((data) => {
             signInWithEmailAndPassword(auth, data.email, data.password)
               .then((credentials) => {
@@ -49,7 +50,6 @@ export const Login = () => {
               });
           })}
         >
-          <div className="text-lg">Login</div>
           <div className="flex flex-col">
             <input
               {...register("email", { required: true, minLength: 6 })}
@@ -83,9 +83,16 @@ export const Login = () => {
             )}
           </div>
 
-          <button type="submit" className="h-10 bg-blue-500 text-white rounded">
+          <button
+            type="submit"
+            className="h-10 bg-blue-500 text-white rounded "
+          >
             Login
           </button>
+
+          <Link to={"/resetPassword"} className="hover:underline">
+            Forgot your password?
+          </Link>
 
           {authError && (
             <span className="text-red-600 text-sm">{authError}</span>

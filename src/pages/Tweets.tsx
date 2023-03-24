@@ -7,7 +7,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { db } from "../../firebase";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { IconContext } from "react-icons/lib/esm/iconContext";
@@ -18,6 +18,7 @@ import { useGetUser } from "../hooks/useGetUser";
 export default function Tweets() {
   const [tweets, setTweets] = useState<any[]>([]);
   const [loader, setLoader] = useState(true);
+
   const navigate = useNavigate();
   const user = useGetCurrentUser();
 
@@ -53,9 +54,9 @@ export default function Tweets() {
       {user ? (
         <button
           onClick={() => navigate("/create")}
-          className="px-4 h-[30px] border-2 rounded-2xl text-slate-200"
+          className="transition ease-in-out delay-100 bg-indigo-500  hover:scale-110 duration-150 text-white rounded-lg p-3"
         >
-          New Twutt
+          New Tweet
         </button>
       ) : null}
       {tweets.length ? (
@@ -71,24 +72,26 @@ export default function Tweets() {
 
 function Tweet({ tweet }: { tweet: any }) {
   const currentUser = useGetCurrentUser();
-  const user = useGetUser(tweet.author);
+
+  const author = useGetUser(tweet.author);
+
   const authorIsCurrentUser = currentUser
     ? currentUser.email === tweet.author
     : false;
   const atName =
-    user && user.firstName && user.lastName
-      ? `@${user.firstName} ${user.lastName}`.replace(" ", "")
+    author && author.firstName && author.lastName
+      ? `@${author.firstName} ${author.lastName}`.replace(" ", "")
       : `@${tweet.author.split("@")[0]}`;
 
   return (
-    <div className="min-h-[400px] px-4 py-2 border rounded-2xl bg-white flex flex-col w-full">
+    <div className="min-h-[400px] px-4 py-2 border rounded-2xl bg-white flex flex-col w-full hover:bg-slate-100">
       <div className="flex space-x-1 text-black justify-between items-center">
         <div className="flex justify-center items-center space-x-4">
           <div>
             <img
               src={
-                user?.profilePicture
-                  ? user?.profilePicture
+                author?.profilePicture
+                  ? author?.profilePicture
                   : "images/placeholder-avatar.jpeg"
               }
               alt="avatar"
@@ -118,18 +121,25 @@ function CardMenu({ id }: { id: string }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleDelete = () => {
-    const tweetRef = doc(db, "tweets", id);
-    updateDoc(tweetRef, { deleted: true })
-      .then(() => console.log(`DELETED SUCCESFULLY: ${id}`))
-      .catch((err) => console.log(`failed with error ${err}`));
-  };
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
 
   return (
-    <div className="relative">
+    <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="hover:bg-slate-100 rounded-xl flex items-center h-[40px] transition ease-out duration-150"
+        className=" rounded-xl flex items-center h-[40px] transition ease-out duration-150"
       >
         <IconContext.Provider
           value={{
