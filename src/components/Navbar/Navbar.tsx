@@ -1,7 +1,4 @@
-import cookie from "cookiejs";
-import { useState } from "react";
-import { useNavigate } from "react-router";
-import { auth } from "../../../firebase";
+import { useEffect, useState } from "react";
 import { useGetCurrentUser } from "../../hooks/useGetCurrentUser";
 import {
   About,
@@ -10,14 +7,22 @@ import {
   Logout,
   NewTweet,
   Profile,
-  Signup,
+  Signup as CreateNewUser,
 } from "./components";
 
 export default function Navbar() {
-  const user = useGetCurrentUser();
+  const currentUser = useGetCurrentUser();
+
+  const [user, setUser] = useState<any>(null);
+
+  console.log(user && user.isAdmin);
+
+  useEffect(() => {
+    setUser(currentUser);
+  }, [currentUser]);
 
   return (
-    <div className="bg-indigo-700 fixed sm:space-y-4  sm:items-center justify-end shadow-2xl font-montserrat w-full z-50 py-4 px-5 md:flex flex-col hidden">
+    <div className="bg-indigo-800 opacity-95 fixed sm:space-y-4  sm:items-center justify-end shadow-2xl font-montserrat w-full z-50 py-4 px-5 md:flex flex-col hidden">
       <div className="hidden sm:flex space-x-4">
         <Home />
         <NewTweet user={user} />
@@ -25,7 +30,7 @@ export default function Navbar() {
         <Profile user={user} />
         <Login user={user} />
         <Logout user={user} />
-        <Signup user={user} />
+        {user && user.isAdmin ? <CreateNewUser user={user} /> : null}
       </div>
       {user ? (
         <span className="text-white hidden sm:flex">
