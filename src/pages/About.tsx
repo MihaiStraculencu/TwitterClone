@@ -7,7 +7,7 @@ import { TbBrandVscode } from "react-icons/tb";
 
 export default function About() {
   return (
-    <div className="flex flex-col items-center h-full rounded-xl bg-slate-300 bg-opacity-20 text-white p-10 font-montserrat pb-12 gap-14">
+    <div className="flex flex-col items-center h-full rounded-xl bg-opacity-20 text-white px-10 font-montserrat pb-12 gap-14">
       <h1 className="font-bold text-3xl text-center">
         Welcome to TwitterClone
       </h1>
