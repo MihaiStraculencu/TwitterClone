@@ -40,7 +40,7 @@ export default function MobileNavbar() {
     >
       <div className="fixed flex justify-end top-0 w-full z-50 bg-indigo-700 p-4">
         <div className="w-full flex justify-center text-3xl font-medium text-white pl-8">
-          <button onClick={() => navigate("/")}>Twutt</button>
+          <button onClick={() => navigate("/")}>TwittClone</button>
         </div>
         <button onClick={() => setOpen(!open)}>
           <BiDotsVerticalRounded color="white" size={35} />
