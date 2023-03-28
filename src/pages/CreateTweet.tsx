@@ -1,42 +1,38 @@
-import { doc, setDoc } from "firebase/firestore";
-import { useState } from "react";
-import { v4 as uuid } from "uuid";
-import { useNavigate } from "react-router";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { db } from "../../firebase";
-import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
+import { doc, setDoc } from 'firebase/firestore'
+import { useContext, useState } from 'react'
+import { v4 as uuid } from 'uuid'
+import { useNavigate } from 'react-router'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { db } from '../../firebase'
+import { UserContext } from '../contexts/UserProvider'
 
 const CreateTweet = () => {
-  const [input, setInput] = useState("");
-  const navigate = useNavigate();
-  const user = useGetCurrentUser();
-  const date = new Date().toDateString();
+  const [input, setInput] = useState('')
+  const navigate = useNavigate()
+  const user = useContext(UserContext)
 
   const onSubmit: SubmitHandler<Input> = (data) => {
-    setDoc(doc(db, "tweets", uuid()), {
+    setDoc(doc(db, 'tweets', uuid()), {
       createdAt: new Date(),
       body: data.body,
-      author: user.email,
+      author: user?.email,
       deleted: false,
     })
       .then(() => navigate(`/`))
-      .catch((err) => console.log(`tweet creation failed with error: ${err}`));
-  };
+      .catch((err) => console.log(`tweet creation failed with error: ${err}`))
+  }
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Input>();
+  } = useForm<Input>()
 
   return (
     <div className="h-[400px] w-[600px] py-2 border rounded-2xl bg-white flex flex-col">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col p-6 space-y-2"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col p-6 space-y-2">
         <textarea
-          {...register("body", { required: true })}
+          {...register('body', { required: true })}
           onChange={(e: any) => setInput(e.target.value)}
           maxLength={380}
           className="h-[250px] appearance-none bg-transparent border-none text-gray-700 py-1 leading-tight focus:outline-none text-lg verflow-y-scroll no-scrollbar resize-none"
@@ -50,7 +46,6 @@ const CreateTweet = () => {
                 This field is required
               </span>
             )}
-            <div className="pr-3 flex flex-wrap">{date}</div>
           </div>
           <div className="flex flex-col space-y-4 justify-end">
             <div>{input.length}/380</div>
@@ -64,9 +59,9 @@ const CreateTweet = () => {
         </div>
       </form>
     </div>
-  );
-};
+  )
+}
 
-type Input = { body: string };
+type Input = { body: string }
 
-export default CreateTweet;
+export default CreateTweet
