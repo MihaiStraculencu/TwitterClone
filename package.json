@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@redux-devtools/extension": "^3.2.5",
-    "cookiejs": "^2.1.2",
     "firebase": "^9.17.1",
     "prettier": "^2.8.4",
     "react": "^18.2.0",
