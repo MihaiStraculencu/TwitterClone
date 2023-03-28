@@ -1,75 +1,72 @@
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { ChangeEvent, useEffect, useState } from "react";
-import { useGetCurrentUser } from "../hooks/useGetCurrentUser";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { db, storage } from "../../firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import cookie from "cookiejs";
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { ChangeEvent, useContext, useState } from 'react'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { storage } from '../../firebase'
+import { UserContext } from '../contexts/UserProvider'
+import { updateProfile } from 'firebase/auth'
+import { updateDoc } from 'firebase/firestore'
 
 export const Profile = () => {
-  const navigate = useNavigate();
-  const [userRef, setUserRef] = useState<any>();
-  const userEmail = cookie.get("user");
-  const user = useGetCurrentUser();
+  const navigate = useNavigate()
+  const currentUser = useContext(UserContext)
 
-  useEffect(() => {
-    !userEmail && navigate("/");
-  }, [userEmail]);
+  if (!currentUser) navigate('/login')
 
-  if (!userEmail) navigate("/login");
+  const [uploadedFile, setUploadedFile] = useState<File | null>()
 
-  const [uploadedFile, setUploadedFile] = useState<File | null>();
-
-  useEffect(() => {
-    const usersCollectionRef = collection(db, "users");
-    const q = query(usersCollectionRef, where("email", "==", userEmail));
-
-    getDocs(q).then((querySnapshot) => {
-      querySnapshot.forEach((docRef) => {
-        setUserRef(doc(db, "users", docRef.id));
-      });
-    });
-  }, []);
-
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit } = useForm()
 
   const uploadNewAvatarImage = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setUploadedFile(event.target.files[0]);
+      setUploadedFile(event.target.files[0])
     }
-  };
+  }
+
+  const handleOnSubmit = handleSubmit((data) => {
+    console.log('currentUser.ref', currentUser.ref)
+    updateDoc(currentUser.ref, {
+      nickname: data.nickname,
+    })
+      .then(() => {
+        console.log('updated profile nickname successfully')
+        window.location.reload()
+      })
+      .catch((error) => {
+        console.log("couldn't update profile nickname", error)
+      })
+
+    updateProfile(currentUser, {
+      displayName: data.nickname,
+    })
+  })
 
   const handleUploadClick = () => {
     if (!uploadedFile) {
-      return;
+      return
     }
 
-    const profilePictureRef = ref(storage, `${userEmail}-profile.jpg`);
+    const profilePictureRef = ref(storage, `${currentUser.email}-profile.jpg`)
 
     uploadBytes(profilePictureRef, uploadedFile).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
-        updateDoc(userRef, {
-          profilePicture: url,
+        updateDoc(currentUser.ref, {
+          photoURL: url,
         })
           .then(() => {
-            console.log("updated profile pic successfully");
-            window.location.reload();
+            console.log('updated profile pic successfully')
+            window.location.reload()
           })
           .catch((error) => {
-            console.log("couldn't update profile pic", error);
-          });
-      });
-    });
-  };
+            console.log("couldn't update profile pic", error)
+          })
+
+        updateProfile(currentUser, {
+          photoURL: url,
+        })
+      })
+    })
+  }
 
   return (
     <div className="w-[500px] flex flex-col justify-center items-center">
@@ -79,19 +76,15 @@ export const Profile = () => {
             <div className="flex items-center space-x-4">
               <img
                 src={
-                  user?.profilePicture
-                    ? user?.profilePicture
-                    : "images/placeholder-avatar.jpeg"
+                  currentUser?.photoURL
+                    ? currentUser?.photoURL
+                    : 'images/placeholder-avatar.jpeg'
                 }
                 alt="avatar"
                 className="inline-block h-12 w-12 rounded-full object-cover"
               />
 
-              <input
-                className="w-[55%]"
-                type="file"
-                onChange={uploadNewAvatarImage}
-              />
+              <input className="w-[55%]" type="file" onChange={uploadNewAvatarImage} />
 
               {uploadedFile ? (
                 <button
@@ -104,53 +97,23 @@ export const Profile = () => {
             </div>
           </div>
 
-          <form
-            onSubmit={handleSubmit((data) => {
-              updateDoc(userRef, {
-                firstName: data.firstName,
-                lastName: data.lastName,
-              })
-                .then(() => {
-                  console.log("updated profile pic successfully");
-                  window.location.reload();
-                })
-                .catch((error) => {
-                  console.log("couldn't update profile pic", error);
-                });
-            })}
-            className="flex flex-col space-y-4"
-          >
+          <form onSubmit={handleOnSubmit} className="flex flex-col space-y-4">
             <input
-              {...register("firstName", {
+              {...register('nickname', {
                 required: true,
-                value: user?.firstName,
+                value: currentUser?.nickname,
               })}
+              defaultValue={currentUser?.nickname}
               type="text"
-              name="firstName"
-              defaultValue={user?.firstName}
-              placeholder="First name"
+              placeholder="Nickname"
               className="h-10 focus:outline-none border-b-2 bg-transparent"
             />
-            <input
-              {...register("lastName", {
-                required: true,
-                value: user?.lastName,
-              })}
-              type="text"
-              name="lastName"
-              defaultValue={user?.lastName}
-              placeholder="Last name"
-              className="h-10 focus:outline-none border-b-2 bg-transparent"
-            />
-            <button
-              type="submit"
-              className="p-2 bg-blue-500 text-white rounded"
-            >
+            <button type="submit" className="p-2 bg-blue-500 text-white rounded">
               Edit
             </button>
           </form>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
