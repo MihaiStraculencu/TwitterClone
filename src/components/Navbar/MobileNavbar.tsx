@@ -1,30 +1,38 @@
-import { useContext, useEffect, useRef, useState } from 'react'
-import { BiDotsVerticalRounded } from 'react-icons/bi'
-import { useNavigate } from 'react-router'
+import { useContext, useEffect, useRef, useState } from "react";
+import { BiDotsVerticalRounded } from "react-icons/bi";
+import { useNavigate } from "react-router";
 
-import { About, Home, Login, Logout, NewTweet, Profile, Signup } from './components'
-import { UserContext } from '../../contexts/UserProvider'
-import { useGetUser } from '../../hooks/useGetUser'
+import {
+  About,
+  Home,
+  Login,
+  Logout,
+  NewTweet,
+  Profile,
+  CreateNewUser,
+} from "./components";
+import { UserContext } from "../../contexts/UserProvider";
+import { useGetUser } from "../../hooks/useGetUser";
 
 export default function MobileNavbar() {
-  const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
+  const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const currentUser = useContext(UserContext)
+  const currentUser = useContext(UserContext);
 
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        setOpen(false)
+        setOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
+    };
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [ref])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
 
   return (
     <div
@@ -33,7 +41,7 @@ export default function MobileNavbar() {
     >
       <div className="fixed flex justify-end top-0 w-full z-50 bg-indigo-700 p-4">
         <div className="w-full flex justify-center text-3xl font-medium text-white pl-8">
-          <button onClick={() => navigate('/')}>TwittClone</button>
+          <button onClick={() => navigate("/")}>TwittClone</button>
         </div>
         <button onClick={() => setOpen(!open)}>
           <BiDotsVerticalRounded color="white" size={35} />
@@ -48,9 +56,11 @@ export default function MobileNavbar() {
           <Profile user={currentUser} />
           <Login user={currentUser} />
           <Logout user={currentUser} />
-          {currentUser && currentUser.isAdmin ? <Signup user={currentUser} /> : null}
+          {currentUser && currentUser.isAdmin ? (
+            <CreateNewUser user={currentUser} />
+          ) : null}
         </div>
       ) : null}
     </div>
-  )
+  );
 }
